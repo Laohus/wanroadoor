@@ -9,7 +9,7 @@
             @select="handleSelect"
     >
         <el-submenu v-for="item in novel2(this.$router.options.routes)" :key="item.children[0].id" :index="item.children[0].path" style="float: right">
-            <template slot="title">{{item.children[0].name}}</template>
+            <template slot="title">{{username}}</template>
             <el-menu-item v-for="items in novel2_1(item.children)" :key="items.id" :index="items.path">
                 {{items.name}}
             </el-menu-item>
@@ -22,10 +22,12 @@
 
 <script>
     import EventBus from "@/../public/EventBus"
+    import {UserLoginOut} from "@/api/user";
     export default {
         data() {
             return {
                 activeIndex:"3",
+                username: localStorage.getItem("UserName")
             }
         },
         methods:{
@@ -50,6 +52,18 @@
                 }
                 if(keyPath.slice(1)==="message"){
                     this.openMessage()
+                }
+                if(keyPath.slice(1)==="Logout"){
+                    UserLoginOut().then(response => {
+                        if(response.code===0){
+                            window.sessionStorage.clear();
+                            this.$router.push('/login').catch(() =>{})
+                            return true
+                        }else {
+                            this.$message.error(response.error);
+                            return false
+                        }
+                    })
                 }
             },
             openNotification() {

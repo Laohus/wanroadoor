@@ -1,10 +1,11 @@
 <template>
+    <div>
+    <hr width="1" size="400" style="margin-top: 10%;background-color: #F5F5DC" class="line">
     <div class="login-Wrap" :style="loginWrap">
             <div class="login">
-                <div class="login-title">
-                    <p>开源平台</p>
+                <div class="programmer">
+                    <img src="@/picture/IT2.png" alt="" STYLE="height: 40%;width: 40%">
                 </div>
-                <br>
                 <el-form ref="FormLogin" :model="FormLogin" :rules="formRules" id="FromLogin">
                     <el-form-item  prop="nameUser">
                         <el-input  v-model="FormLogin.nameUser" type="text" placeholder="请输入您的用户名" autocomplete="off"></el-input>
@@ -29,19 +30,17 @@
                         </a>
                     </div>
                 </div>
-                <div class="error">
-                    <p class="signup-link error" id="error" style="color: red"></p>
-                </div>
-                <div class="record">
-                    <a href="https://beian.miit.gov.cn">浙ICP备2021034588号-1</a>
-                </div>
             </div>
-        <br>
+            <div class="record">
+                <a href="https://beian.miit.gov.cn">浙ICP备2021034588号-1</a>
+            </div>
+    </div>
     </div>
 </template>
 
 <script>
     import { UserLogin } from '@/api/user'
+    import { mapMutations } from 'vuex';
     export default {
         name: "AccountLogin",
         data() {
@@ -50,9 +49,10 @@
                     nameUser:"",
                     passwordUser:"",
                 },
+                programmer:"",
                 loginWrap: {
-                    backgroundImage: "url(" + require("@/picture/loginphoto.jpg") + ")",
-                    backgroundSize: "100% 100%",
+                    backgroundImage: "url(" + require("@/picture/IT.png") + ")",
+                    // backgroundSize: "100% 100%",
                     backgroundRepeat: "no-repeat",
                 },
                 formRules:{
@@ -68,11 +68,15 @@
             }
         },
         methods:{
+            ...mapMutations(['changeLogin']),
             onsubmit(formName){
                 this.$refs[formName].validate(valid => {
                     if(valid){
                         UserLogin(JSON.stringify(this.FormLogin)).then(response => {
                             if(response.code===0){
+                                this.userToken =  response.data.token;
+                                this.timeOut =  response.data.timeOut;
+                                this.changeLogin({ Authorization: this.userToken,Timeout: this.timeOut,UserName: this.FormLogin.nameUser });
                                 this.$router.push('/home')
                             }else {
                                 this.$message.error(response.error);
@@ -101,21 +105,11 @@
     }
     .login{
         height: 62%;
-        width: 35%;
-        margin-left: 30%;
-        margin-top: 10%;
-        background-color: white;
-        border: 1px solid #e0e6ed;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px 0 rgb(85 85 9.4%), 0 1px 20px 0 rgb(0 0 0.8%), 0 1px 11px 0 rgb(0 0 0.6%);
+        width: 32%;
+        margin-left: 55%;
+        margin-top: 5%;
     }
-    .login-title{
-        height: 12%;
-        width: 100%;
-        text-align: center;
-        font-size: 30px;
-        font-weight: bold;
-    }
+
     .social{
         height: 10%;
         width: 100%;
@@ -154,6 +148,7 @@
     .record{
         height: 5%;
         width: 100%;
+        margin-top: 10%;
     }
     .record a{
         text-align: center;
@@ -161,14 +156,10 @@
         text-decoration: none;
         display: block;
     }
-    .error{
-        height: 10%;
-        width: 100%;
-        margin-left: 5%;
-        font-size: 20px;
-    }
+
     /deep/.el-input__inner{
         height: 50px;
+        background-color: #f6f3f8!important;
     }
     /deep/ #FromLogin input:focus{
         border: 1px solid #C0C4CC;
@@ -183,10 +174,5 @@
         font-size: 20px;
     }
 
-    .login{padding:20px 40px;position:relative;box-shadow:0 0 10px rgba(0,0,0,.15);background:#FFFFFF;-webkit-background-size:100% 40px}
-    .login,.login:before,.login:after{-webkit-border-bottom-left-radius:20px 500px;-webkit-border-bottom-right-radius:500px 30px;-webkit-border-top-right-radius:5px 100px}
-    .login:after,.login:before{content:' ';width:100%;height:100%;position:absolute;left:0;top:0;z-index:-1;box-shadow:0 0 10px rgba(0,0,0,.15)}
-    .login:before{-webkit-transform:rotate(4deg);background:#909399}
-    .login:after{-webkit-transform:rotate(-4deg);background:#C0C4CC}
 
 </style>
