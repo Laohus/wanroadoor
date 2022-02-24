@@ -31,3 +31,10 @@ export function UserDel(data){
         data
     })
 }
+
+export function UserState(){
+    return request({
+        method: "POST",
+        url: "/UserState",
+    })
+}

@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from  'vue-router'
 import layout from '@/layout/index'
+import {UserState} from "@/api/user";
 
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
     routes: [
         {
             path : '/',
@@ -188,3 +189,39 @@ export default new Router({
         },
     ]
 })
+
+// 导航守卫
+// 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' || to.path === '/') {
+        next();
+    } else {
+        const date = new Date();
+        const TimeNow = date.getTime()
+        const token = localStorage.getItem('Authorization');
+        const Timeout = localStorage.getItem('Timeout');
+        if (token === null || token === '') {
+            localStorage.removeItem('Authorization');
+            localStorage.removeItem('Timeout');
+            next('/login');
+        }
+        if(Timeout < TimeNow){
+            localStorage.removeItem('Authorization');
+            localStorage.removeItem('Timeout');
+            next('/login');
+        }
+        if(token != null){
+            UserState().then(response => {
+                if(response.code===0) {
+                    next()
+                }else {
+                    localStorage.removeItem('Authorization');
+                    localStorage.removeItem('Timeout');
+                    next('/login');
+                }
+            })
+        }
+    }
+});
+
+export default router;

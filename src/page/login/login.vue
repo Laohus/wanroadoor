@@ -42,6 +42,7 @@
 
 <script>
     import { UserLogin } from '@/api/user'
+    import { mapMutations } from 'vuex';
     export default {
         name: "AccountLogin",
         data() {
@@ -68,11 +69,15 @@
             }
         },
         methods:{
+            ...mapMutations(['changeLogin']),
             onsubmit(formName){
                 this.$refs[formName].validate(valid => {
                     if(valid){
                         UserLogin(JSON.stringify(this.FormLogin)).then(response => {
                             if(response.code===0){
+                                this.userToken =  response.data.token;
+                                this.timeOut =  response.data.timeOut;
+                                this.changeLogin({ Authorization: this.userToken,Timeout: this.timeOut });
                                 this.$router.push('/home')
                             }else {
                                 this.$message.error(response.error);
