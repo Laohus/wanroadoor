@@ -21,6 +21,7 @@
     import upload from '@/page/performance/upload'
     import report from '@/page/report/report'
     import novel from '@/page/novel/novel'
+    import cueList from "@/page/performance/cueList";
     import EventBus from "@/../public/EventBus"
 
     export default {
@@ -47,6 +48,7 @@
             "upload":upload,
             "report":report,
             "novel":novel,
+            "cueList":cueList,
         },
         mounted() {
             EventBus.$on("menuTabs", (tabsItem) => {
