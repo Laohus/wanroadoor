@@ -159,6 +159,13 @@ const router =  new Router({
                     id:"5-2",
                     meta: { title: '场景执行', affix: true }
                 },
+                {
+                    path : '/cueList',
+                    component: () => import ('@/page/performance/cueList'),
+                    name:"场景列表",
+                    id:"5-3",
+                    meta: { title: '场景列表', affix: true }
+                },
             ]
         },
         {

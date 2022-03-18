@@ -52,7 +52,6 @@
                 programmer:"",
                 loginWrap: {
                     backgroundImage: "url(" + require("@/picture/IT.png") + ")",
-                    // backgroundSize: "100% 100%",
                     backgroundRepeat: "no-repeat",
                 },
                 formRules:{
